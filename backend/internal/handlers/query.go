@@ -28,6 +28,13 @@ func (h *QueryHandler) HandleQuery(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get user ID from context (added by auth middleware)
+	userID, ok := r.Context().Value("userID").(int)
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
 	// Parse request body
 	var req models.QueryRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -48,7 +55,7 @@ func (h *QueryHandler) HandleQuery(w http.ResponseWriter, r *http.Request) {
 	// Process query
 	log.Printf("Processing query: %s (textbook_id=%d)", req.Question, req.TextbookID)
 
-	resp, err := h.ragService.Query(req)
+	resp, err := h.ragService.Query(req, userID)
 	if err != nil {
 		log.Printf("Query error: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
