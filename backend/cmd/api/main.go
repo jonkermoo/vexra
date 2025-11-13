@@ -35,11 +35,18 @@ func main() {
 	ragService := services.NewRAGService(db, embeddingService)
 	log.Println("RAG service initialized")
 
+	authService := services.NewAuthService(db)
+	log.Println("Auth service initialized")
+
 	// Initialize handlers
 	queryHandler := handlers.NewQueryHandler(ragService)
+	authHandler := handlers.NewAuthHandler(authService)
 
 	// Set up HTTP routes
 	http.HandleFunc("/api/query", queryHandler.HandleQuery)
+	http.HandleFunc("/api/auth/register", authHandler.HandleRegister)
+	http.HandleFunc("/api/auth/login", authHandler.HandleLogin)
+	http.HandleFunc("/api/auth/verify", authHandler.HandleVerify)
 	http.HandleFunc("/api/health", handlers.HandleHealth)
 
 	// Enable CORS for frontend
