@@ -105,7 +105,7 @@ func (db *DB) GetTextbook(id int) (*models.Textbook, error) {
 	return &textbook, nil
 }
 
-// CreateUser creates a new user with hashed password and verification token
+// Create a new user with hashed password and verification token
 func (db *DB) CreateUser(email, passwordHash, verificationToken string) (*models.User, error) {
 	var user models.User
 
@@ -129,7 +129,7 @@ func (db *DB) CreateUser(email, passwordHash, verificationToken string) (*models
 	return &user, nil
 }
 
-// GetUserByEmail retrieves a user by their email address
+// Retrieve a user by their email address
 func (db *DB) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 
@@ -158,7 +158,7 @@ func (db *DB) GetUserByEmail(email string) (*models.User, error) {
 	return &user, nil
 }
 
-// VerifyUser marks a user's email as verified using their verification token
+// Mark a user's email as verified using their verification token
 func (db *DB) VerifyUser(token string) error {
 	query := `
 		UPDATE users
@@ -183,7 +183,7 @@ func (db *DB) VerifyUser(token string) error {
 	return nil
 }
 
-// UpdateLastLogin updates the user's last login timestamp
+// Update the user's last login timestamp
 func (db *DB) UpdateLastLogin(userID int) error {
 	query := `UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1`
 
