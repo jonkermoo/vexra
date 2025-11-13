@@ -4,8 +4,21 @@ import "time"
 
 // User represents a student
 type User struct {
+	ID                int        `json:"id"`
+	Email             string     `json:"email"`
+	PasswordHash      string     `json:"-"`
+	Verified          bool       `json:"verified"`
+	VerificationToken string     `json:"-"`
+	CreatedAt         time.Time  `json:"created_at"`
+	LastLogin         *time.Time `json:"last_login,omitempty"`
+}
+
+// Class represents a student's class/folder
+type Class struct {
 	ID        int       `json:"id"`
-	Email     string    `json:"email"`
+	UserID    int       `json:"user_id"`
+	Name      string    `json:"name"`
+	Color     string    `json:"color"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
@@ -50,4 +63,24 @@ type ChunkSource struct {
 	PageNumber int     `json:"page_number"`
 	Content    string  `json:"content"`
 	Similarity float64 `json:"similarity"`
+}
+
+// Auth request/response models
+type RegisterRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type AuthResponse struct {
+	Token string `json:"token"`
+	User  User   `json:"user"`
+}
+
+type VerifyEmailRequest struct {
+	Token string `json:"token"`
 }
