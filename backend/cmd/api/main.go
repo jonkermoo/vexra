@@ -26,14 +26,14 @@ func main() {
 		log.Fatal("Failed to connect to database:", err)
 	}
 	defer db.Close()
-	log.Println("✓ Connected to database")
+	log.Println("Connected to database")
 
 	// Initialize services
 	embeddingService := services.NewEmbeddingService()
-	log.Println("✓ Embedding service initialized")
+	log.Println("Embedding service initialized")
 
 	ragService := services.NewRAGService(db, embeddingService)
-	log.Println("✓ RAG service initialized")
+	log.Println("RAG service initialized")
 
 	// Initialize handlers
 	queryHandler := handlers.NewQueryHandler(ragService)
