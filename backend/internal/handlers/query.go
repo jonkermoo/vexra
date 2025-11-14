@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/jonkermoo/rag-textbook/backend/internal/middleware"
 	"github.com/jonkermoo/rag-textbook/backend/internal/models"
 	"github.com/jonkermoo/rag-textbook/backend/internal/services"
 )
@@ -29,7 +30,7 @@ func (h *QueryHandler) HandleQuery(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get user ID from context (added by auth middleware)
-	userID, ok := r.Context().Value("userID").(int)
+	userID, ok := middleware.GetUserID(r)
 	if !ok {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
