@@ -60,14 +60,14 @@ export default function Query() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       {/* Header */}
-      <header className="bg-white shadow">
+      <header className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Ask a Question</h1>
+          <h1 className="text-3xl font-bold text-white">Ask a Question</h1>
           <button
             onClick={() => navigate("/library")}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+            className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition border border-gray-700"
           >
             Back to Library
           </button>
@@ -76,15 +76,15 @@ export default function Query() {
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Query Form */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
+        <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg shadow-lg p-6 mb-8">
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Textbook Selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Select Textbook
               </label>
               {textbooks.length === 0 ? (
-                <div className="text-gray-500 text-sm p-4 bg-yellow-50 rounded-lg">
+                <div className="text-gray-400 text-sm p-4 bg-yellow-900/50 border border-yellow-700 rounded-lg">
                   No textbooks available. Please upload and process a textbook
                   first.
                 </div>
@@ -95,7 +95,7 @@ export default function Query() {
                     setSelectedTextbookId(Number(e.target.value))
                   }
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                 >
                   {textbooks.map((textbook) => (
                     <option key={textbook.id} value={textbook.id}>
@@ -108,7 +108,7 @@ export default function Query() {
 
             {/* Question Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Your Question
               </label>
               <textarea
@@ -117,7 +117,7 @@ export default function Query() {
                 placeholder="What would you like to know?"
                 required
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+                className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none placeholder-gray-500"
               />
             </div>
 
@@ -125,7 +125,7 @@ export default function Query() {
             <button
               type="submit"
               disabled={isLoading || !selectedTextbookId || !question.trim()}
-              className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition font-semibold"
+              className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:bg-gray-600 transition font-semibold shadow-lg shadow-blue-500/20"
             >
               {isLoading ? "Getting Answer..." : "Ask Question"}
             </button>
@@ -134,35 +134,35 @@ export default function Query() {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+          <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg mb-6">
             {error}
           </div>
         )}
 
         {/* Answer Display */}
         {answer && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Answer</h2>
+          <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">Answer</h2>
 
             <div className="prose max-w-none mb-6">
-              <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+              <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {answer.answer}
               </p>
             </div>
 
             {/* Sources */}
             {answer.sources && answer.sources.length > 0 && (
-              <div className="border-t pt-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+              <div className="border-t border-gray-700 pt-6">
+                <h3 className="text-lg font-semibold text-white mb-3">
                   Sources (Page References)
                 </h3>
                 <div className="space-y-3">
                   {answer.sources.map((source, index) => (
-                    <div key={index} className="bg-gray-50 rounded-lg p-4">
-                      <div className="font-medium text-blue-600 mb-2">
+                    <div key={index} className="bg-gray-900/50 border border-gray-700 rounded-lg p-4">
+                      <div className="font-medium text-blue-400 mb-2">
                         Page {source.page_number}
                       </div>
-                      <p className="text-sm text-gray-700 line-clamp-3">
+                      <p className="text-sm text-gray-400 line-clamp-3">
                         {source.content}
                       </p>
                     </div>
