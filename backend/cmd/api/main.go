@@ -45,10 +45,12 @@ func main() {
 	// Initialize handlers
 	queryHandler := handlers.NewQueryHandler(ragService)
 	authHandler := handlers.NewAuthHandler(authService)
+	uploadHandler := handlers.NewUploadHandler(db)
 
 	// Set up HTTP routes
 	// Protected routes (require authentication)
 	http.Handle("/api/query", authMiddleware(http.HandlerFunc(queryHandler.HandleQuery)))
+	http.Handle("/api/upload", authMiddleware(http.HandlerFunc(uploadHandler.HandleUpload)))
 
 	// Public routes (no authentication needed)
 	http.HandleFunc("/api/auth/register", authHandler.HandleRegister)
@@ -81,6 +83,7 @@ func main() {
 
 	log.Printf("\nServer starting on http://localhost:%s", port)
 	log.Println("\nAvailable endpoints:")
+	log.Println("  POST /api/upload - Upload a textbook PDF")
 	log.Println("  POST /api/query  - Submit a question")
 	log.Println("  GET  /api/health - Health check")
 	log.Println("\nPress Ctrl+C to stop")
