@@ -43,6 +43,22 @@ func main() {
 	// Initialize middleware
 	authMiddleware := middleware.AuthMiddleware(authService)
 
+	// CORS middleware wrapper
+	corsMiddleware := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+			if r.Method == "OPTIONS" {
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+
+			next.ServeHTTP(w, r)
+		})
+	}
+
 	// Initialize handlers
 	textbookHandler := handlers.NewTextbookHandler(db)
 	queryHandler := handlers.NewQueryHandler(ragService)
@@ -50,10 +66,10 @@ func main() {
 	uploadHandler := handlers.NewUploadHandler(db)
 
 	// Textbook management routes (protected)
-	http.Handle("/api/textbooks", authMiddleware(http.HandlerFunc(textbookHandler.HandleListTextbooks)))
+	http.Handle("/api/textbooks", corsMiddleware(authMiddleware(http.HandlerFunc(textbookHandler.HandleListTextbooks))))
 	http.HandleFunc("/api/textbooks/", func(w http.ResponseWriter, r *http.Request) {
-		// Apply auth middleware manually for paths with IDs
-		authMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Apply CORS and auth middleware manually for paths with IDs
+		corsMiddleware(authMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// Route to appropriate handler based on path
 			if strings.HasSuffix(r.URL.Path, "/status") {
 				textbookHandler.HandleGetTextbookStatus(w, r)
@@ -64,19 +80,19 @@ func main() {
 			} else {
 				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			}
-		})).ServeHTTP(w, r)
+		}))).ServeHTTP(w, r)
 	})
 
 	// Set up HTTP routes
 	// Protected routes (require authentication)
-	http.Handle("/api/query", authMiddleware(http.HandlerFunc(queryHandler.HandleQuery)))
-	http.Handle("/api/upload", authMiddleware(http.HandlerFunc(uploadHandler.HandleUpload)))
+	http.Handle("/api/query", corsMiddleware(authMiddleware(http.HandlerFunc(queryHandler.HandleQuery))))
+	http.Handle("/api/upload", corsMiddleware(authMiddleware(http.HandlerFunc(uploadHandler.HandleUpload))))
 
 	// Public routes (no authentication needed)
-	http.HandleFunc("/api/auth/register", authHandler.HandleRegister)
-	http.HandleFunc("/api/auth/login", authHandler.HandleLogin)
-	http.HandleFunc("/api/auth/verify", authHandler.HandleVerify)
-	http.HandleFunc("/api/health", handlers.HandleHealth)
+	http.Handle("/api/auth/register", corsMiddleware(http.HandlerFunc(authHandler.HandleRegister)))
+	http.Handle("/api/auth/login", corsMiddleware(http.HandlerFunc(authHandler.HandleLogin)))
+	http.Handle("/api/auth/verify", corsMiddleware(http.HandlerFunc(authHandler.HandleVerify)))
+	http.Handle("/api/health", corsMiddleware(http.HandlerFunc(handlers.HandleHealth)))
 
 	// Enable CORS for frontend
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
