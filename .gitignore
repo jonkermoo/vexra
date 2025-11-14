@@ -1,3 +1,17 @@
 *.env
 *.env.local
 */.env
+
+# Uploaded PDFs and test data (too large for GitHub)
+backend/cmd/api/uploads/
+backend/ingestion/test_data/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Go build artifacts
+*.exe
+*.exe~
+backend/cmd/api/api
