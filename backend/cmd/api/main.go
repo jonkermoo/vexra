@@ -10,6 +10,7 @@ import (
 
 	"github.com/jonkermoo/rag-textbook/backend/internal/database"
 	"github.com/jonkermoo/rag-textbook/backend/internal/handlers"
+	"github.com/jonkermoo/rag-textbook/backend/internal/middleware"
 	"github.com/jonkermoo/rag-textbook/backend/internal/services"
 )
 
@@ -38,12 +39,18 @@ func main() {
 	authService := services.NewAuthService(db)
 	log.Println("Auth service initialized")
 
+	// Initialize middleware
+	authMiddleware := middleware.AuthMiddleware(authService)
+
 	// Initialize handlers
 	queryHandler := handlers.NewQueryHandler(ragService)
 	authHandler := handlers.NewAuthHandler(authService)
 
 	// Set up HTTP routes
-	http.HandleFunc("/api/query", queryHandler.HandleQuery)
+	// Protected routes (require authentication)
+	http.Handle("/api/query", authMiddleware(http.HandlerFunc(queryHandler.HandleQuery)))
+
+	// Public routes (no authentication needed)
 	http.HandleFunc("/api/auth/register", authHandler.HandleRegister)
 	http.HandleFunc("/api/auth/login", authHandler.HandleLogin)
 	http.HandleFunc("/api/auth/verify", authHandler.HandleVerify)
@@ -54,7 +61,7 @@ func main() {
 		// CORS headers
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
 		// Handle preflight requests
 		if r.Method == "OPTIONS" {
