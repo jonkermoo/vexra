@@ -60,7 +60,6 @@ func (db *DB) SearchSimilarChunks(textbookID int, queryEmbedding []float32, topK
 	var chunks []models.Chunk
 	for rows.Next() {
 		var chunk models.Chunk
-		var distance float64
 
 		err := rows.Scan(
 			&chunk.ID,
@@ -69,7 +68,7 @@ func (db *DB) SearchSimilarChunks(textbookID int, queryEmbedding []float32, topK
 			&chunk.PageNumber,
 			&chunk.ChunkIndex,
 			&chunk.CreatedAt,
-			&distance,
+			&chunk.Distance,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan chunk: %w", err)

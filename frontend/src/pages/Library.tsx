@@ -108,6 +108,17 @@ export default function Library() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Submit on Enter (without Shift)
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (question.trim() && selectedFolder?.processed && !isQuerying) {
+        handleAskQuestion(e as any);
+      }
+    }
+    // Allow Shift+Enter for new line (default behavior)
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -247,21 +258,32 @@ export default function Library() {
               )}
 
               {/* Input Form */}
-              <form onSubmit={handleAskQuestion} className="flex items-center gap-3">
-                <input
-                  type="text"
+              <form onSubmit={handleAskQuestion} className="flex items-end gap-3">
+                <textarea
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder="Ask anything..."
                   disabled={!selectedFolder.processed}
-                  className="flex-1 px-5 py-3 bg-gray-800 border border-gray-700 text-white rounded-full focus:outline-none focus:border-gray-600 transition placeholder-gray-500 disabled:opacity-50"
+                  rows={1}
+                  className="flex-1 px-5 py-3 bg-gray-800 border border-gray-700 text-white rounded-3xl focus:outline-none focus:border-gray-600 transition placeholder-gray-500 disabled:opacity-50 resize-none overflow-hidden"
+                  style={{
+                    minHeight: '48px',
+                    maxHeight: '200px',
+                    height: 'auto',
+                  }}
+                  onInput={(e) => {
+                    const target = e.target as HTMLTextAreaElement;
+                    target.style.height = 'auto';
+                    target.style.height = Math.min(target.scrollHeight, 200) + 'px';
+                  }}
                 />
                 <button
                   type="submit"
                   disabled={
                     isQuerying || !question.trim() || !selectedFolder.processed
                   }
-                  className="w-10 h-10 flex items-center justify-center bg-white text-gray-900 rounded-full hover:bg-gray-100 disabled:bg-gray-700 disabled:text-gray-500 disabled:opacity-50 transition flex-shrink-0"
+                  className="w-10 h-10 flex items-center justify-center bg-white text-gray-900 rounded-full hover:bg-gray-100 disabled:bg-gray-700 disabled:text-gray-500 disabled:opacity-50 transition flex-shrink-0 mb-[2px]"
                 >
                   {isQuerying ? (
                     <div className="w-4 h-4 border-2 border-gray-900 border-t-transparent rounded-full animate-spin"></div>

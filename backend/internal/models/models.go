@@ -41,6 +41,7 @@ type Chunk struct {
 	ChunkIndex int       `json:"chunk_index"`
 	Embedding  []float32 `json:"-"`
 	CreatedAt  time.Time `json:"created_at"`
+	Distance   float64   `json:"distance"` // Cosine distance from query (0 = identical, higher = less similar)
 }
 
 // QueryRequest

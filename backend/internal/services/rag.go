@@ -78,13 +78,18 @@ func (s *RAGService) Query(req models.QueryRequest, userID int) (*models.QueryRe
 		return nil, fmt.Errorf("failed to generate answer: %w", err)
 	}
 
-	// Build response with sources
-	sources := make([]models.ChunkSource, len(chunks))
-	for i, chunk := range chunks {
-		sources[i] = models.ChunkSource{
-			PageNumber: chunk.PageNumber,
-			Content:    truncateContent(chunk.Content, 200),
-			Similarity: 0.0, // calculate if needed
+	// Build response with sources - only include chunks with distance < 0.5 (relevant matches)
+	// Lower distance = more similar. We filter out irrelevant chunks.
+	var sources []models.ChunkSource
+	const relevanceThreshold = 0.5
+
+	for _, chunk := range chunks {
+		if chunk.Distance < relevanceThreshold {
+			sources = append(sources, models.ChunkSource{
+				PageNumber: chunk.PageNumber,
+				Content:    truncateContent(chunk.Content, 200),
+				Similarity: 1.0 - chunk.Distance, // Convert distance to similarity score
+			})
 		}
 	}
 
@@ -137,7 +142,7 @@ Please provide a helpful answer based on the context above.`, contextStr, questi
 				},
 			},
 			Temperature: 0.7,
-			MaxTokens:   500,
+			MaxTokens:   1500,
 		},
 	)
 
