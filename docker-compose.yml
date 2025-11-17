@@ -51,9 +51,6 @@ services:
       # Server
       - PORT=8080
       - JWT_SECRET=${JWT_SECRET:-change-this-in-production}
-    depends_on:
-      postgres:
-        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/api/health"]
