@@ -2,6 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authAPI } from "../services/api";
 
+// Helper function to format error messages for display
+const formatErrorMessage = (error: string): string => {
+  // Capitalize first letter
+  const formatted = error.charAt(0).toUpperCase() + error.slice(1);
+
+  // Add period if not present
+  return formatted.endsWith('.') ? formatted : formatted + '.';
+};
+
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,7 +47,8 @@ export default function Register() {
       // Redirect to library
       navigate("/library");
     } catch (err: any) {
-      setError(err.response?.data || "Registration failed. Please try again.");
+      const errorMessage = err.response?.data || "Registration failed. Please try again.";
+      setError(formatErrorMessage(errorMessage));
     } finally {
       setIsLoading(false);
     }
