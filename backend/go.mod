@@ -1,6 +1,6 @@
 module github.com/jonkermoo/rag-textbook/backend
 
-go 1.25.4
+go 1.24.0
 
 require (
 	github.com/aws/aws-sdk-go v1.55.5
