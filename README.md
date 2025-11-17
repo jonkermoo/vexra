@@ -1,4 +1,4 @@
-﻿# Vexra
+﻿# Lexra
 
 ## Overview
 
@@ -39,4 +39,5 @@ Vexra is a cloud-deployed, serverless Retrieval-Augmented Generation (RAG) syste
 
 ### What am I working on right now?
 i hate aws so much security dude
+
 
