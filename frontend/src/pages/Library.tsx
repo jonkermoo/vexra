@@ -29,7 +29,8 @@ export default function Library() {
   // Auto-scroll to bottom when conversation updates
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   }, [conversationHistory]);
 
@@ -78,7 +79,7 @@ export default function Library() {
       // Close folder if it's the one being deleted
       if (selectedFolder?.id === id) {
         setSelectedFolder(null);
-        setAnswer(null);
+        setConversationHistory([]);
       }
       // Reload textbooks
       await loadTextbooks();
@@ -196,7 +197,8 @@ export default function Library() {
               {/* Status Warning */}
               {!selectedFolder.processed && (
                 <div className="bg-yellow-900/30 border border-yellow-700/50 text-yellow-300 px-6 py-4 rounded-lg mb-8 text-center mt-8">
-                  This textbook is still being processed. Please check back in a few minutes.
+                  This textbook is still being processed. Please check back in a
+                  few minutes.
                 </div>
               )}
 
@@ -235,19 +237,21 @@ export default function Library() {
                                   Sources
                                 </p>
                                 <div className="space-y-2">
-                                  {conversation.answer.sources.map((source, index) => (
-                                    <div
-                                      key={index}
-                                      className="bg-gray-800/50 border border-gray-700 rounded-lg p-4"
-                                    >
-                                      <div className="text-blue-400 text-sm font-medium mb-2">
-                                        Page {source.page_number}
+                                  {conversation.answer.sources.map(
+                                    (source, index) => (
+                                      <div
+                                        key={index}
+                                        className="bg-gray-800/50 border border-gray-700 rounded-lg p-4"
+                                      >
+                                        <div className="text-blue-400 text-sm font-medium mb-2">
+                                          Page {source.page_number}
+                                        </div>
+                                        <p className="text-gray-400 text-sm">
+                                          "{source.content}"
+                                        </p>
                                       </div>
-                                      <p className="text-gray-400 text-sm">
-                                        "{source.content}"
-                                      </p>
-                                    </div>
-                                  ))}
+                                    )
+                                  )}
                                 </div>
                               </div>
                             )}
@@ -294,7 +298,10 @@ export default function Library() {
               )}
 
               {/* Input Form */}
-              <form onSubmit={handleAskQuestion} className="flex items-end gap-3">
+              <form
+                onSubmit={handleAskQuestion}
+                className="flex items-end gap-3"
+              >
                 <textarea
                   ref={textareaRef}
                   value={question}
@@ -305,14 +312,15 @@ export default function Library() {
                   rows={1}
                   className="flex-1 px-5 py-3 bg-gray-800 border border-gray-700 text-white rounded-3xl focus:outline-none focus:border-gray-600 transition placeholder-gray-500 disabled:opacity-50 resize-none overflow-hidden"
                   style={{
-                    minHeight: '48px',
-                    maxHeight: '200px',
-                    height: 'auto',
+                    minHeight: "48px",
+                    maxHeight: "200px",
+                    height: "auto",
                   }}
                   onInput={(e) => {
                     const target = e.target as HTMLTextAreaElement;
-                    target.style.height = 'auto';
-                    target.style.height = Math.min(target.scrollHeight, 200) + 'px';
+                    target.style.height = "auto";
+                    target.style.height =
+                      Math.min(target.scrollHeight, 200) + "px";
                   }}
                 />
                 <button
