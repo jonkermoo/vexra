@@ -69,8 +69,8 @@ func main() {
 				}
 			}
 
-			// Also allow any Vercel preview URL
-			if strings.HasSuffix(origin, ".vercel.app") {
+			// Also allow any Vercel preview URL or lexra.online subdomain
+			if strings.HasSuffix(origin, ".vercel.app") || strings.Contains(origin, "lexra.online") {
 				isAllowed = true
 			}
 
