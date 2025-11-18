@@ -50,9 +50,30 @@ func main() {
 	// CORS middleware wrapper
 	corsMiddleware := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+			// Allow multiple origins for development and production
+			origin := r.Header.Get("Origin")
+			allowedOrigins := []string{
+				"http://localhost:5173",           // Local development
+				"http://localhost:3000",           // Alternative local port
+				os.Getenv("FRONTEND_URL"),         // Production frontend URL from env
+			}
+
+			// Check if origin is in allowed list
+			isAllowed := false
+			for _, allowed := range allowedOrigins {
+				if origin == allowed || allowed == "*" {
+					isAllowed = true
+					break
+				}
+			}
+
+			if isAllowed {
+				w.Header().Set("Access-Control-Allow-Origin", origin)
+			}
+
 			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+			w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 			if r.Method == "OPTIONS" {
 				w.WriteHeader(http.StatusOK)
