@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
+import uploadGif from "../assets/images/upload.gif";
+import askGif from "../assets/images/ask.gif";
+import citeGif from "../assets/images/cite.gif";
+
 export default function Home() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
@@ -128,18 +132,11 @@ export default function Home() {
                   {/* GIF Placeholder for Upload PDFs */}
                   <div className="rounded-xl overflow-hidden shadow-xl border border-slate-600/50 bg-slate-800/50">
                     <img
-                      src="/assets/images/upload.gif"
+                      src={uploadGif}
                       alt="Upload Demo"
                       className="w-full h-auto object-cover"
                       style={{ maxHeight: "300px" }}
                     />
-                    {/* Fallback */}
-                    <div className="min-h-[250px] flex items-center justify-center text-slate-600">
-                      <div className="text-center">
-                        <div className="text-5xl mb-3">📤</div>
-                        <p className="text-sm">upload.gif placeholder</p>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -157,18 +154,11 @@ export default function Home() {
                   {/* GIF Placeholder for Ask Questions */}
                   <div className="rounded-xl overflow-hidden shadow-xl border border-slate-600/50 bg-slate-800/50 order-2 md:order-1">
                     <img
-                      src="/assets/images/questions.gif"
+                      src={askGif}
                       alt="Questions Demo"
                       className="w-full h-auto object-cover"
                       style={{ maxHeight: "300px" }}
                     />
-                    {/* Fallback */}
-                    <div className="min-h-[250px] flex items-center justify-center text-slate-600">
-                      <div className="text-center">
-                        <div className="text-5xl mb-3">💡</div>
-                        <p className="text-sm">questions.gif placeholder</p>
-                      </div>
-                    </div>
                   </div>
                   <div className="text-left order-1 md:order-2">
                     <div className="text-6xl mb-6">💡</div>
@@ -206,18 +196,11 @@ export default function Home() {
                   {/* GIF Placeholder for Page References */}
                   <div className="rounded-xl overflow-hidden shadow-xl border border-slate-600/50 bg-slate-800/50">
                     <img
-                      src="/assets/images/references.gif"
+                      src={citeGif}
                       alt="References Demo"
                       className="w-full h-auto object-cover"
                       style={{ maxHeight: "300px" }}
                     />
-                    {/* Fallback */}
-                    <div className="min-h-[250px] flex items-center justify-center text-slate-600">
-                      <div className="text-center">
-                        <div className="text-5xl mb-3">🔍</div>
-                        <p className="text-sm">references.gif placeholder</p>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
