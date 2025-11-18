@@ -1,13 +1,19 @@
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
+import httpx
 
 load_dotenv('../.env')
 
 class EmbeddingsGenerator:
     def __init__(self):
         """Initialize OpenAI client"""
-        self.client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+        # Create httpx client without proxies to avoid compatibility issues
+        http_client = httpx.Client(verify=False)
+        self.client = OpenAI(
+            api_key=os.getenv('OPENAI_API_KEY'),
+            http_client=http_client
+        )
         self.model = "text-embedding-3-small"
         print(f"Embeddings generator initialized (model={self.model})")
     
